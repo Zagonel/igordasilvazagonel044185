@@ -27,11 +27,11 @@ public class ArtistaJpaEntity {
     @Column(name = "artista_id", nullable = false, unique = true)
     private UUID artistaId;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "nome", nullable = false, length = 200)
     private String nome;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(name = "tipo", nullable = false, length = 20)
     private TipoArtista tipo;
 
     @ManyToMany(mappedBy = "artistas")

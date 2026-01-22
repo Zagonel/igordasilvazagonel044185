@@ -15,7 +15,7 @@ public class Artista {
     private final TipoArtista tipo;
     private final List<Album> albuns;
 
-    private Artista(UUID id, String nome, TipoArtista tipo, List<Album> albuns) {
+    public Artista(UUID id, String nome, TipoArtista tipo, List<Album> albuns) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;

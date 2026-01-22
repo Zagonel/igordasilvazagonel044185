@@ -29,7 +29,7 @@ public class AlbumJpaEntity {
     @Column(name = "album_id", nullable = false, unique = true)
     private UUID albumId;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "titulo", nullable = false, length = 200)
     private String titulo;
 
     @Column(name = "data_lancamento")

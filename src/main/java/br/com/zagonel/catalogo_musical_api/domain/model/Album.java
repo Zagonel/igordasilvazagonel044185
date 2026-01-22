@@ -19,7 +19,7 @@ public class Album {
     private final List<Artista> artistas;
     private final List<Musica> musicas;
 
-    private Album(UUID id, String titulo, LocalDate dataLancamento, List<CapaAlbum> capas, List<Artista> artistas, List<Musica> musicas) {
+    public Album(UUID id, String titulo, LocalDate dataLancamento, List<CapaAlbum> capas, List<Artista> artistas, List<Musica> musicas) {
         this.id = id;
         this.titulo = titulo;
         this.dataLancamento = dataLancamento;
@@ -31,7 +31,6 @@ public class Album {
     public static Album criarNovoAlbum(String titulo, LocalDate dataLancamento) {
         validarTitulo(titulo);
         validarDataLancamento(dataLancamento);
-
         return new Album(
                 UUID.randomUUID(),
                 titulo,

@@ -15,7 +15,7 @@ public class CapaAlbum {
     private boolean principal;
     private final LocalDateTime dataUpload;
 
-    private CapaAlbum(String path, String descricao, boolean principal, LocalDateTime dataUpload) {
+    public CapaAlbum(String path, String descricao, boolean principal, LocalDateTime dataUpload) {
         this.path = path;
         this.descricao = descricao;
         this.principal = principal;

@@ -12,7 +12,7 @@ public class Musica {
     public final Duration duracao;
     public final Integer ordem;
 
-    private Musica(String titulo, Duration duracao, Integer ordem) {
+    public Musica(String titulo, Duration duracao, Integer ordem) {
         this.titulo = titulo;
         this.duracao = duracao;
         this.ordem = ordem;
