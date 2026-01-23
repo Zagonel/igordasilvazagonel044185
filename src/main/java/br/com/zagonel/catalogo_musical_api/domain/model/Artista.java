@@ -65,8 +65,8 @@ public class Artista {
         }
     }
 
-    public void removerAlbum(UUID albumUuid) {
-        if (albumUuid == null || albumUuid.toString().isEmpty()) {
+    public void desvincularAlbum(UUID albumUuid) {
+        if (albumUuid == null) {
             throw new DomainException("O identificador do álbum é obrigatório para a exclusão.");
         }
 

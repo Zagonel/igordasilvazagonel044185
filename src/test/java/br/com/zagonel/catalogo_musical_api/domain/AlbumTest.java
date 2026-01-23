@@ -5,11 +5,9 @@ import br.com.zagonel.catalogo_musical_api.domain.exceptions.DomainException;
 import br.com.zagonel.catalogo_musical_api.domain.model.Album;
 import br.com.zagonel.catalogo_musical_api.domain.model.Artista;
 import br.com.zagonel.catalogo_musical_api.domain.model.CapaAlbum;
-import br.com.zagonel.catalogo_musical_api.domain.model.Musica;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +24,6 @@ class AlbumTest {
         assertThat(album.getId()).isNotNull();
         assertThat(album.getTitulo()).isEqualTo("Discovery");
         assertThat(album.getDataLancamento()).isEqualTo(LocalDate.of(2001, 3, 12));
-        assertThat(album.getMusicas()).isEmpty();
         assertThat(album.getArtistas()).isEmpty();
     }
 
@@ -99,16 +96,5 @@ class AlbumTest {
         assertThat(capa1.isPrincipal()).isFalse();
         assertThat(album.getCapaPrincipal()).isPresent().contains(capa2);
         assertThat(album.getCapas()).hasSize(2);
-    }
-
-    @Test
-    @DisplayName("Deve adicionar músicas corretamente")
-    void deveAdicionarMusicas() {
-        Album album = Album.criarNovoAlbum("Homework", LocalDate.now());
-        Musica musica = Musica.criarNovaMusica("Around the World", Duration.ofMinutes(7), 1);
-
-        album.adicionarMusica(musica);
-
-        assertThat(album.getMusicas()).containsExactly(musica);
     }
 }

@@ -1,6 +1,6 @@
 package br.com.zagonel.catalogo_musical_api.service.album.create;
 
-import br.com.zagonel.catalogo_musical_api.api.dto.request.AlbumRequestDTO;
+import br.com.zagonel.catalogo_musical_api.api.dto.request.album.AlbumCreateRequestDTO;
 import br.com.zagonel.catalogo_musical_api.api.dto.response.AlbumResponseDTO;
 import br.com.zagonel.catalogo_musical_api.domain.exceptions.DomainException;
 import br.com.zagonel.catalogo_musical_api.domain.model.Album;
@@ -15,7 +15,6 @@ import br.com.zagonel.catalogo_musical_api.infrastructure.repository.ArtistaRepo
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -45,13 +44,13 @@ class CreateAlbumServiceTest {
     @Autowired
     private CreateAlbumService createAlbumService;
 
-    private AlbumRequestDTO requestDTO;
+    private AlbumCreateRequestDTO requestDTO;
     private UUID artistaUuid;
 
     @BeforeEach
     void setUp() {
         artistaUuid = UUID.randomUUID();
-        requestDTO = new AlbumRequestDTO();
+        requestDTO = new AlbumCreateRequestDTO();
         requestDTO.setTitulo("Thriller");
         requestDTO.setDataLancamento(LocalDate.of(1982, 11, 30));
         requestDTO.setArtistasIds(List.of(artistaUuid.toString()));
@@ -60,7 +59,7 @@ class CreateAlbumServiceTest {
     @Test
     @DisplayName("Deve criar um álbum com sucesso vinculado a um artista")
     void deveCriarAlbumComSucesso() {
-        // GIVEN
+
         ArtistaJpaEntity artistaJpa = mock(ArtistaJpaEntity.class);
         Artista artistaDomain = mock(Artista.class);
         AlbumJpaEntity albumJpa = new AlbumJpaEntity();
@@ -68,7 +67,7 @@ class CreateAlbumServiceTest {
 
         when(artistaRepository.findByArtistaId(artistaUuid)).thenReturn(Optional.of(artistaJpa));
         when(artistaMapper.toDomain(artistaJpa)).thenReturn(artistaDomain);
-        when(artistaDomain.getId()).thenReturn(artistaUuid); // Necessário para o vincularArtista
+        when(artistaDomain.getId()).thenReturn(artistaUuid);
 
         when(albumMapper.toEntity(any(Album.class))).thenReturn(albumJpa);
         when(albumRepository.save(any(AlbumJpaEntity.class))).thenReturn(albumJpa);

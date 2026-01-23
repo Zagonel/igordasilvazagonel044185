@@ -15,17 +15,15 @@ public class Album {
     private final UUID id;
     private final String titulo;
     private final LocalDate dataLancamento;
-    private List<CapaAlbum> capas;
+    private final List<CapaAlbum> capas;
     private final List<Artista> artistas;
-    private final List<Musica> musicas;
 
-    public Album(UUID id, String titulo, LocalDate dataLancamento, List<CapaAlbum> capas, List<Artista> artistas, List<Musica> musicas) {
+    public Album(UUID id, String titulo, LocalDate dataLancamento, List<CapaAlbum> capas, List<Artista> artistas) {
         this.id = id;
         this.titulo = titulo;
         this.dataLancamento = dataLancamento;
         this.capas = capas;
         this.artistas = artistas;
-        this.musicas = musicas;
     }
 
     public static Album criarNovoAlbum(String titulo, LocalDate dataLancamento) {
@@ -36,26 +34,18 @@ public class Album {
                 titulo,
                 dataLancamento,
                 new ArrayList<>(),
-                new ArrayList<>(),
                 new ArrayList<>()
         );
     }
 
     public Album alterarTitulo(String novoTitulo) {
         validarTitulo(novoTitulo);
-        return new Album(this.id, novoTitulo, this.dataLancamento, this.capas, this.artistas, this.musicas);
+        return new Album(this.id, novoTitulo, this.dataLancamento, this.capas, this.artistas);
     }
 
     public Album alterarDataLancamento(LocalDate novaData) {
         validarDataLancamento(novaData);
-        return new Album(this.id, this.titulo, novaData, this.capas, this.artistas, this.musicas);
-    }
-
-    public void adicionarMusica(Musica musica) {
-        if (musica == null) {
-            throw new DomainException("A música não pode ser nula.");
-        }
-        this.musicas.add(musica);
+        return new Album(this.id, this.titulo, novaData, this.capas, this.artistas);
     }
 
     public void vincularArtista(Artista artista) {
@@ -71,6 +61,19 @@ public class Album {
         }
     }
 
+    public void desvincularArtista(UUID artistaID) {
+        if (artistaID == null) {
+            throw new DomainException("O identificador do artista é obrigatório para a exclusão.");
+        }
+
+        boolean removido = this.artistas.removeIf(artista -> artista.getId().equals(artistaID));
+
+        if (!removido) {
+            throw new DomainException("O Artista informado não foi encontrado na lista de artistas vinculadas ao album.");
+        }
+    }
+
+
     public void adicionarCapa(CapaAlbum novaCapa) {
         if (novaCapa == null) {
             throw new DomainException("Dados da capa são obrigatórios.");
@@ -81,6 +84,25 @@ public class Album {
         }
 
         this.capas.add(novaCapa);
+    }
+
+    public void removerCapa(String path) {
+        if (path == null || path.isBlank()) {
+            throw new DomainException("O caminho da capa é obrigatório para a remoção.");
+        }
+
+        CapaAlbum capaParaRemover = this.capas.stream()
+                .filter(c -> c.getPath().equals(path))
+                .findFirst()
+                .orElseThrow(() -> new DomainException("Capa não encontrada para o caminho informado."));
+
+        boolean eraPrincipal = capaParaRemover.isPrincipal();
+
+        this.capas.remove(capaParaRemover);
+
+        if (eraPrincipal && !this.capas.isEmpty()) {
+            this.capas.getFirst().alterarStatusPrincipal(true);
+        }
     }
 
     private static void validarTitulo(String titulo) {

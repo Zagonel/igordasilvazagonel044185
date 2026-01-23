@@ -1,14 +1,15 @@
-package br.com.zagonel.catalogo_musical_api.api.dto.request;
+package br.com.zagonel.catalogo_musical_api.api.dto.request.album;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
-public class AlbumRequestDTO {
+@AllArgsConstructor
+@NoArgsConstructor
+public class AlbumCreateRequestDTO {
     private String titulo;
     private LocalDate dataLancamento;
     private List<String> artistasIds;
