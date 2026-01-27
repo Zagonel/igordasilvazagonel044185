@@ -2,6 +2,7 @@ package br.com.zagonel.catalogo_musical_api.infrastructure.mappers;
 
 import br.com.zagonel.catalogo_musical_api.api.dto.response.AlbumResponseDTO;
 import br.com.zagonel.catalogo_musical_api.domain.model.Album;
+import br.com.zagonel.catalogo_musical_api.domain.model.Artista;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.AlbumJpaEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -23,4 +24,6 @@ public interface AlbumMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "albumId", source = "id")
     void updateEntityFromDomain(Album domain, @MappingTarget AlbumJpaEntity entity);
+
+    AlbumResponseDTO.ArtistaResumidoResponseDTO toArtistaResumido(Artista domain);
 }

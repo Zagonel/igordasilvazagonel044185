@@ -7,9 +7,9 @@ import br.com.zagonel.catalogo_musical_api.domain.model.Album;
 import br.com.zagonel.catalogo_musical_api.infrastructure.mappers.AlbumMapper;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.AlbumJpaEntity;
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.AlbumRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -29,14 +29,16 @@ public class UpdateAlbumService {
         Album albumDomain = albumMapper.toDomain(albumJpaEntity);
 
         if (dto.getTitulo() != null) {
-            albumDomain.alterarTitulo(dto.getTitulo());
+            albumDomain = albumDomain.alterarTitulo(dto.getTitulo());
         }
 
         if (dto.getDataLancamento() != null) {
-            albumDomain.alterarDataLancamento(dto.getDataLancamento());
+            albumDomain = albumDomain.alterarDataLancamento(dto.getDataLancamento());
         }
 
-        albumRepository.save(albumMapper.toEntity(albumDomain));
+        albumMapper.updateEntityFromDomain(albumDomain, albumJpaEntity);
+
+        albumRepository.save(albumJpaEntity);
 
         return albumMapper.toResponse(albumDomain);
     }

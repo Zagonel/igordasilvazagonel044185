@@ -10,7 +10,7 @@ import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.AlbumJpaEn
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.ArtistaJpaEntity;
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.AlbumRepository;
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.ArtistaRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

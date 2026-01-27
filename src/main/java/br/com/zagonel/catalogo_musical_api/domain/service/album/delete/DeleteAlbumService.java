@@ -3,7 +3,7 @@ package br.com.zagonel.catalogo_musical_api.domain.service.album.delete;
 import br.com.zagonel.catalogo_musical_api.domain.exceptions.DomainException;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.AlbumJpaEntity;
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.AlbumRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
