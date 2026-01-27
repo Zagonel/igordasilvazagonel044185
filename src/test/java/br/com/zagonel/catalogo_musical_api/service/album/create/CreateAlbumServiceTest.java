@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -57,39 +58,49 @@ class CreateAlbumServiceTest {
     }
 
     @Test
-    @DisplayName("Deve criar um álbum com sucesso vinculado a um artista")
+    @DisplayName("Deve criar um álbum com sucesso")
     void deveCriarAlbumComSucesso() {
 
-        ArtistaJpaEntity artistaJpa = mock(ArtistaJpaEntity.class);
+        ArtistaJpaEntity artistaJpa = new ArtistaJpaEntity();
         Artista artistaDomain = mock(Artista.class);
-        AlbumJpaEntity albumJpa = new AlbumJpaEntity();
-        Album albumDomain = Album.criarNovoAlbum(requestDTO.getTitulo(), requestDTO.getDataLancamento());
 
-        when(artistaRepository.findByArtistaId(artistaUuid)).thenReturn(Optional.of(artistaJpa));
+        Album albumDomain = Album.criarNovoAlbum(requestDTO.getTitulo(), requestDTO.getDataLancamento());
+        AlbumJpaEntity albumJpa = new AlbumJpaEntity();
+
+        when(artistaRepository.findByArtistaId(artistaUuid))
+                .thenReturn(Optional.of(artistaJpa));
+
         when(artistaMapper.toDomain(artistaJpa)).thenReturn(artistaDomain);
+
         when(artistaDomain.getId()).thenReturn(artistaUuid);
 
         when(albumMapper.toEntity(any(Album.class))).thenReturn(albumJpa);
         when(albumRepository.save(any(AlbumJpaEntity.class))).thenReturn(albumJpa);
         when(albumMapper.toDomain(albumJpa)).thenReturn(albumDomain);
-        when(albumMapper.toResponse(any(Album.class))).thenReturn(new AlbumResponseDTO());
+
+        AlbumResponseDTO responseDTO = new AlbumResponseDTO();
+        responseDTO.setTitulo(requestDTO.getTitulo());
+        responseDTO.setDataLancamento(requestDTO.getDataLancamento());
+        responseDTO.setArtistas(List.of(new AlbumResponseDTO.ArtistaResumidoResponseDTO(artistaUuid, "Nome", null)));
+
+        when(albumMapper.toResponse(any(Album.class))).thenReturn(responseDTO);
 
         // WHEN
         AlbumResponseDTO result = createAlbumService.execute(requestDTO);
 
         // THEN
         assertThat(result).isNotNull();
-        verify(artistaRepository).findByArtistaId(artistaUuid);
-        verify(albumRepository).save(any(AlbumJpaEntity.class));
+        assertEquals(requestDTO.getTitulo(), result.getTitulo());
+        assertEquals(requestDTO.getDataLancamento(), result.getDataLancamento());
+        assertEquals(artistaUuid, result.getArtistas().getFirst().getId());
     }
 
     @Test
     @DisplayName("Deve lançar DomainException quando o artista não for encontrado")
     void deveFalharQuandoArtistaNaoExistir() {
-        // GIVEN
+
         when(artistaRepository.findByArtistaId(any(UUID.class))).thenReturn(Optional.empty());
 
-        // WHEN & THEN
         assertThatThrownBy(() -> createAlbumService.execute(requestDTO))
                 .isInstanceOf(DomainException.class)
                 .hasMessageContaining("Não foi possivel encontrar o artista");

@@ -23,6 +23,7 @@ public interface ArtistaMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "artistaId", source = "id")
+    @Mapping(target = "albuns", ignore = true)
     void updateEntityFromDomain(Artista domain, @MappingTarget ArtistaJpaEntity entity);
 
     ArtistaResponseDTO toResponse(Artista domain);

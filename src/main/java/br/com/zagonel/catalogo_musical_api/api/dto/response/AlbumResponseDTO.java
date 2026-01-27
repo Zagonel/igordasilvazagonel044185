@@ -1,7 +1,9 @@
 package br.com.zagonel.catalogo_musical_api.api.dto.response;
 
 import br.com.zagonel.catalogo_musical_api.domain.enums.TipoArtista;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -10,6 +12,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class AlbumResponseDTO {
     private UUID id;
     private String titulo;
@@ -19,6 +23,8 @@ public class AlbumResponseDTO {
 
     @Getter
     @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class ArtistaResumidoResponseDTO {
         private UUID id;
         private String nome;

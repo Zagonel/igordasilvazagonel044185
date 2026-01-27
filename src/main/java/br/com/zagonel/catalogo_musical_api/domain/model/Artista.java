@@ -78,7 +78,10 @@ public class Artista {
     }
 
     private static void validarNome(String nome) {
-        if (nome == null || nome.trim().length() < 2 || nome.length() > 200) {
+        if (nome == null || nome.isBlank()) {
+            throw new DomainException("Nome do artista não pode ser null ou vazio");
+        }
+        if (nome.trim().length() < 2 || nome.length() > 200) {
             throw new DomainException("Nome do artista deve ter entre 2 e 200 caracteres.");
         }
     }

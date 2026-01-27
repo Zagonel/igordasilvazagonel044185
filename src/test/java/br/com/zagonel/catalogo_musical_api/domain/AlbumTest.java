@@ -9,9 +9,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Domínio: Álbum")
 class AlbumTest {
@@ -55,6 +57,20 @@ class AlbumTest {
     }
 
     @Test
+    @DisplayName("Deve alterar a Data de lançamento com sucesso")
+    void deveAlterarDataLancamento() {
+
+        Album album = Album.criarNovoAlbum("Original", LocalDate.now());
+
+        LocalDate novaData = LocalDate.now().minusDays(2);
+        Album albumAlterado = album.alterarDataLancamento(novaData);
+
+        assertThat(albumAlterado.getDataLancamento()).isEqualTo(novaData);
+        assertThat(albumAlterado.getId()).isEqualTo(album.getId());
+    }
+
+
+    @Test
     @DisplayName("Deve adicionar e vincular artista com sucesso")
     void deveVincularArtista() {
         Album album = Album.criarNovoAlbum("Random Access Memories", LocalDate.now());
@@ -68,6 +84,16 @@ class AlbumTest {
     }
 
     @Test
+    @DisplayName("Deve Falhar ao vincular")
+    void deveFalharAoTentarVincularArtista() {
+        Album album = Album.criarNovoAlbum("Random Access Memories", LocalDate.now());
+
+        assertThatThrownBy(() -> album.vincularArtista(null))
+                .isInstanceOf(DomainException.class)
+                .hasMessageContaining("Artista não pode ser null.");
+    }
+
+    @Test
     @DisplayName("Deve falhar ao vincular o mesmo artista duas vezes")
     void deveFalharVinculoDuplicado() {
         Album album = Album.criarNovoAlbum("Album Teste", LocalDate.now());
@@ -78,6 +104,41 @@ class AlbumTest {
         assertThatThrownBy(() -> album.vincularArtista(artista))
                 .isInstanceOf(DomainException.class)
                 .hasMessageContaining("Esse artista já está vinculado a esse Album.");
+    }
+
+    @Test
+    @DisplayName("Deve desvincular um artista do album com sucesso")
+    void deveDesvincularArtista() {
+        Album album = Album.criarNovoAlbum("Random Access Memories", LocalDate.now());
+
+        Artista artista = Artista.criarNovoArtista("Daft Punk", TipoArtista.BANDA);
+
+        album.vincularArtista(artista);
+
+        album.desvincularArtista(artista.getId());
+
+        assertThat(album.getArtistas()).hasSize(0);
+        assertThat(album.possuiArtista()).isFalse();
+    }
+
+    @Test
+    @DisplayName("Deve falhar ao tentar desvincular com ID null")
+    void deveFalharDesvincularArtista() {
+        Album album = Album.criarNovoAlbum("Random Access Memories", LocalDate.now());
+
+        assertThatThrownBy(() -> album.desvincularArtista(null))
+                .isInstanceOf(DomainException.class)
+                .hasMessageContaining("O identificador do artista é obrigatório para a exclusão.");
+    }
+
+    @Test
+    @DisplayName("Deve falhar ao tentar desvincular um artista inexistente de um album")
+    void deveFalharAoDesvincularUmArtistaInexistente() {
+        Album album = Album.criarNovoAlbum("Random Access Memories", LocalDate.now());
+
+        assertThatThrownBy(() -> album.desvincularArtista(UUID.randomUUID()))
+                .isInstanceOf(DomainException.class)
+                .hasMessageContaining("O Artista informado não foi encontrado na lista de artistas vinculadas ao album.");
     }
 
     @Test
@@ -97,4 +158,59 @@ class AlbumTest {
         assertThat(album.getCapaPrincipal()).isPresent().contains(capa2);
         assertThat(album.getCapas()).hasSize(2);
     }
+
+    @Test
+    @DisplayName("Deve falhar ao adicionar capa do album por ser nula")
+    void deveFalharAoAdicionarCapaNula() {
+        Album album = Album.criarNovoAlbum("AlbumTeste", LocalDate.now());
+
+        assertThatThrownBy(() -> album.adicionarCapa(null))
+                .isInstanceOf(DomainException.class)
+                .hasMessageContaining("Dados da capa são obrigatórios.");
+
+    }
+
+    @Test
+    @DisplayName("Deve ter sucesso ao remover capa do album")
+    void deveRemoverCapaDoAlbum() {
+        Album album = Album.criarNovoAlbum("AlbumTeste", LocalDate.now());
+
+        CapaAlbum capa1 = CapaAlbum.criarCapaAlbum("path/1.jpg", "Frente", true);
+
+        album.adicionarCapa(capa1);
+
+        assertEquals(capa1.getPath(), album.getCapas().getFirst().getPath());
+        assertEquals(capa1.getDescricao(), album.getCapas().getFirst().getDescricao());
+        assertEquals(capa1.isPrincipal(), album.getCapas().getFirst().isPrincipal());
+
+        album.removerCapa("path/1.jpg");
+
+        assertThat(album.getCapas()).hasSize(0);
+    }
+
+    @Test
+    @DisplayName("Deve ter falhar ao remover capa do album inexistente")
+    void deveFalharAoRemoverCapaInexistenteDoAlbum() {
+        Album album = Album.criarNovoAlbum("AlbumTeste", LocalDate.now());
+
+        assertThatThrownBy(() -> album.removerCapa("INVALIDO"))
+                .isInstanceOf(DomainException.class)
+                .hasMessageContaining("Capa não encontrada para o caminho informado.");
+
+        assertThatThrownBy(() -> album.removerCapa(""))
+                .isInstanceOf(DomainException.class)
+                .hasMessageContaining("O caminho da capa é obrigatório para a remoção.");
+    }
+
+    @Test
+    @DisplayName("Deve ter falhar ao remover capa do album com path invalido")
+    void deveFalharAoRemoverCapaComPathBlankDoAlbum() {
+        Album album = Album.criarNovoAlbum("AlbumTeste", LocalDate.now());
+
+        assertThatThrownBy(() -> album.removerCapa(null))
+                .isInstanceOf(DomainException.class)
+                .hasMessageContaining("O caminho da capa é obrigatório para a remoção.");
+
+    }
+
 }
