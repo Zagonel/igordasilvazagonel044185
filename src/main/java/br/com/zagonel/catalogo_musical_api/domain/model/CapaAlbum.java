@@ -1,13 +1,14 @@
 package br.com.zagonel.catalogo_musical_api.domain.model;
 
 import br.com.zagonel.catalogo_musical_api.domain.exceptions.DomainException;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 
 @Getter
+@EqualsAndHashCode
 public class CapaAlbum {
 
     private final String path;
@@ -34,18 +35,5 @@ public class CapaAlbum {
 
     public void alterarStatusPrincipal(boolean status) {
         this.principal = status;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CapaAlbum that = (CapaAlbum) o;
-        return path.equals(that.path);
-    }
-
-    @Override
-    public int hashCode() {
-        return path.hashCode();
     }
 }

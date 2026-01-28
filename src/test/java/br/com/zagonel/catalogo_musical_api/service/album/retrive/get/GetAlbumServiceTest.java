@@ -59,7 +59,7 @@ public class GetAlbumServiceTest {
 
         // THEN
         assertThat(result).isNotNull();
-        verify(albumRepository).findByAlbumId(albumUuid); // Valida se buscou no repo correto
+        verify(albumRepository).findByAlbumId(albumUuid);
         verify(albumMapper).toDomain(albumJpaEntity);
         verify(albumMapper).toResponse(albumDomain);
     }
@@ -73,7 +73,7 @@ public class GetAlbumServiceTest {
         // WHEN & THEN
         assertThatThrownBy(() -> getAlbumService.execute(albumUuid))
                 .isInstanceOf(DomainException.class)
-                .hasMessageContaining("Álbum não encontrado");
+                .hasMessageContaining("Álbum não encontrado com o ID: " + albumUuid);
 
         verify(albumMapper, never()).toDomain(any());
         verify(albumMapper, never()).toResponse(any());

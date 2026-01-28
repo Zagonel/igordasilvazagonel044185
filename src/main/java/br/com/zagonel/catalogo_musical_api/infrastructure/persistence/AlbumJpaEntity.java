@@ -1,7 +1,6 @@
 package br.com.zagonel.catalogo_musical_api.infrastructure.persistence;
 
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.embeddables.CapaAlbumEmbeddable;
-import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.embeddables.MusicaEmbeddable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,11 +41,6 @@ public class AlbumJpaEntity {
             inverseJoinColumns = @JoinColumn(name = "artista_id")
     )
     private List<ArtistaJpaEntity> artistas = new ArrayList<>();
-
-    @ElementCollection
-    @CollectionTable(name = "musica", joinColumns = @JoinColumn(name = "album_id"))
-    @OrderBy("ordem ASC")
-    private List<MusicaEmbeddable> musicas = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "album_capa", joinColumns = @JoinColumn(name = "album_id"))

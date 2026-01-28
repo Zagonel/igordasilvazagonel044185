@@ -1,32 +1,60 @@
 package br.com.zagonel.catalogo_musical_api.infrastructure.mappers;
 
 import br.com.zagonel.catalogo_musical_api.api.dto.response.ArtistaResponseDTO;
-import br.com.zagonel.catalogo_musical_api.domain.model.Album;
 import br.com.zagonel.catalogo_musical_api.domain.model.Artista;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.ArtistaJpaEntity;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.ReportingPolicy;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface ArtistaMapper {
+import java.util.ArrayList;
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "artistaId", source = "id")
-    @Mapping(target = "albuns", ignore = true)
-    ArtistaJpaEntity toEntity(Artista domain);
+@Component
+@NoArgsConstructor
+public class ArtistaMapper {
 
-    @Mapping(target = "id", source = "artistaId")
-    @Mapping(target = "albuns", ignore = true)
-    Artista toDomain(ArtistaJpaEntity entity);
+    public ArtistaJpaEntity toEntity(Artista domain) {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "artistaId", source = "id")
-    @Mapping(target = "albuns", ignore = true)
-    void updateEntityFromDomain(Artista domain, @MappingTarget ArtistaJpaEntity entity);
+        if (domain == null) {
+            return null;
+        }
 
-    ArtistaResponseDTO toResponse(Artista domain);
+        ArtistaJpaEntity entity = new ArtistaJpaEntity();
+        entity.setArtistaId(domain.getId());
+        entity.setNome(domain.getNome());
+        entity.setTipo(domain.getTipo());
+        return entity;
+    }
 
-    ArtistaResponseDTO.AlbumResumidoResponseDTO toAlbumResumido(Album domain);
+    public Artista toDomain(ArtistaJpaEntity entity) {
+
+        if (entity == null) {
+            return null;
+        }
+
+        return new Artista(
+                entity.getArtistaId(),
+                entity.getNome(),
+                entity.getTipo(),
+                new ArrayList<>()
+        );
+    }
+
+    public ArtistaResponseDTO toResponse(Artista domain) {
+        if (domain == null) {
+            return null;
+        }
+        ArtistaResponseDTO dto = new ArtistaResponseDTO();
+        dto.setId(domain.getId());
+        dto.setNome(domain.getNome());
+        dto.setTipo(domain.getTipo());
+        return dto;
+    }
+
+    public void updateEntityFromDomain(Artista domain, ArtistaJpaEntity entity) {
+        if (domain == null || entity == null) {
+            return;
+        }
+        entity.setNome(domain.getNome());
+        entity.setTipo(domain.getTipo());
+    }
 }

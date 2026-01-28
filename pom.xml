@@ -134,6 +134,14 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.14</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*MapperImpl.class</exclude>
+                        <exclude>**/*DTO.class</exclude>
+                        <exclude>**/*SearchQuery.class</exclude>
+                        <exclude>br/com/zagonel/catalogo_musical_api/infrastructure/mappers/*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -147,7 +155,6 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
-
                     <execution>
                         <id>jacoco-check</id>
                         <goals>

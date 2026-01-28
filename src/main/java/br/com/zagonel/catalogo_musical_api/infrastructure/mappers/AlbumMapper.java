@@ -2,28 +2,70 @@ package br.com.zagonel.catalogo_musical_api.infrastructure.mappers;
 
 import br.com.zagonel.catalogo_musical_api.api.dto.response.AlbumResponseDTO;
 import br.com.zagonel.catalogo_musical_api.domain.model.Album;
-import br.com.zagonel.catalogo_musical_api.domain.model.Artista;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.AlbumJpaEntity;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.ReportingPolicy;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {ArtistaMapper.class, CapaAlbumMapper.class})
-public interface AlbumMapper {
+@Component
+@RequiredArgsConstructor
+public class AlbumMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "albumId", source = "id")
-    AlbumJpaEntity toEntity(Album domain);
+    private final ArtistaMapper artistaMapper;
+    private final CapaAlbumMapper capaAlbumMapper;
 
-    @Mapping(target = "id", source = "albumId")
-    Album toDomain(AlbumJpaEntity entity);
+    public AlbumJpaEntity toEntity(Album domain) {
 
-    AlbumResponseDTO toResponse(Album domain);
+        if (domain == null) {
+            return null;
+        }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "albumId", source = "id")
-    void updateEntityFromDomain(Album domain, @MappingTarget AlbumJpaEntity entity);
+        AlbumJpaEntity entity = new AlbumJpaEntity();
+        entity.setAlbumId(domain.getId());
+        entity.setTitulo(domain.getTitulo());
+        entity.setDataLancamento(domain.getDataLancamento());
 
-    AlbumResponseDTO.ArtistaResumidoResponseDTO toArtistaResumido(Artista domain);
+        if (domain.getCapas() != null) {
+            entity.setCapas(domain.getCapas().stream()
+                    .map(capaAlbumMapper::toEntity)
+                    .toList());
+        }
+
+        return entity;
+    }
+
+    public Album toDomain(AlbumJpaEntity entity) {
+
+        if (entity == null) {
+            return null;
+        }
+
+        return new Album(
+                entity.getAlbumId(),
+                entity.getTitulo(),
+                entity.getDataLancamento(),
+                entity.getCapas().stream().map(capaAlbumMapper::toDomain).toList(),
+                entity.getArtistas().stream().map(artistaMapper::toDomain).toList()
+        );
+    }
+
+    public AlbumResponseDTO toResponse(Album domain) {
+        if (domain == null) {
+            return null;
+        }
+
+        AlbumResponseDTO dto = new AlbumResponseDTO();
+        dto.setId(domain.getId());
+        dto.setTitulo(domain.getTitulo());
+        dto.setDataLancamento(domain.getDataLancamento());
+        return dto;
+    }
+
+    public void updateEntityFromDomain(Album domain, AlbumJpaEntity entity) {
+        if (domain == null || entity == null) {
+            return;
+        }
+
+        entity.setTitulo(domain.getTitulo());
+        entity.setDataLancamento(domain.getDataLancamento());
+    }
 }

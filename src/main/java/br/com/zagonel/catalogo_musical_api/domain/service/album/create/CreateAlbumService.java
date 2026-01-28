@@ -10,10 +10,12 @@ import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.AlbumJpaEn
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.ArtistaJpaEntity;
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.AlbumRepository;
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.ArtistaRepository;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -21,9 +23,9 @@ import java.util.UUID;
 public class CreateAlbumService {
 
     private final AlbumRepository albumRepository;
+    private final ArtistaRepository artistaRepository;
     private final AlbumMapper albumMapper;
     private final ArtistaMapper artistaMapper;
-    private final ArtistaRepository artistaRepository;
 
     @Transactional
     public AlbumResponseDTO execute(AlbumCreateRequestDTO requestDTO) {
@@ -32,15 +34,22 @@ public class CreateAlbumService {
                 requestDTO.getDataLancamento()
         );
 
+        List<ArtistaJpaEntity> artistasGerenciados = new ArrayList<>();
+
         if (requestDTO.getArtistasIds() != null) {
-            requestDTO.getArtistasIds().forEach(artistaUuid -> {
-                ArtistaJpaEntity artistaJpaEntity = artistaRepository.findByArtistaId(UUID.fromString(artistaUuid))
+            for (String artistaUuidStr : requestDTO.getArtistasIds()) {
+
+                UUID artistaUuid = UUID.fromString(artistaUuidStr);
+                ArtistaJpaEntity artistaJpa = artistaRepository.findByArtistaId(artistaUuid)
                         .orElseThrow(() -> new DomainException("Não foi possivel encontrar o artista com ID: " + artistaUuid));
-                albumDomain.vincularArtista(artistaMapper.toDomain(artistaJpaEntity));
-            });
+
+                albumDomain.vincularArtista(artistaMapper.toDomain(artistaJpa));
+                artistasGerenciados.add(artistaJpa);
+            }
         }
 
         AlbumJpaEntity albumEntity = albumMapper.toEntity(albumDomain);
+        albumEntity.setArtistas(artistasGerenciados);
 
         AlbumJpaEntity savedEntity = albumRepository.save(albumEntity);
 

@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface AlbumRepository extends JpaRepository<AlbumJpaEntity, Long>, JpaSpecificationExecutor<AlbumJpaEntity> {
 
-    @Query("select a from AlbumJpaEntity a where a.albumId =: albumId")
+    @Query("select a from AlbumJpaEntity a where a.albumId =:albumId")
     Optional<AlbumJpaEntity> findByAlbumId(@Param("albumId") UUID albumId);
 
 }
