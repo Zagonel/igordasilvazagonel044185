@@ -3,9 +3,11 @@ package br.com.zagonel.catalogo_musical_api.infrastructure.repository;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.ArtistaJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,5 +18,9 @@ public interface ArtistaRepository extends JpaRepository<ArtistaJpaEntity, Long>
     @Query("select a from ArtistaJpaEntity a where a.artistaId =:artistaId")
     Optional<ArtistaJpaEntity> findByArtistaId(@Param("artistaId") UUID artistaId);
 
+    @Transactional
+    @Modifying
+    @Query("delete from ArtistaJpaEntity a where a.artistaId =:artistaId")
+    int deleteByArtistaId(@Param("artistaId") UUID artistaId);
 
 }

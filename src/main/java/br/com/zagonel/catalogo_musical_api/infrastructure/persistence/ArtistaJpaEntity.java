@@ -36,4 +36,11 @@ public class ArtistaJpaEntity {
 
     @ManyToMany(mappedBy = "artistas")
     private List<AlbumJpaEntity> albuns = new ArrayList<>();
+
+    @PreRemove
+    private void removeArtistasFromAlbuns() {
+        for (AlbumJpaEntity album : albuns) {
+            album.getArtistas().remove(this);
+        }
+    }
 }

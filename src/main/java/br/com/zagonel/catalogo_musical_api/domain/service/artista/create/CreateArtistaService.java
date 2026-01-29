@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,22 +29,28 @@ public class CreateArtistaService {
 
     @Transactional
     public ArtistaResponseDTO execute(ArtistaCreateRequestDTO requestDTO) {
-
         Artista artistaDomain = Artista.criarNovoArtista(
                 requestDTO.getNome(),
                 requestDTO.getTipo()
         );
 
+        List<AlbumJpaEntity> albunsGerenciados = new ArrayList<>();
+        ArtistaJpaEntity artistaEntity = artistaMapper.toEntity(artistaDomain);
+
         if (requestDTO.getAlbunsIds() != null) {
             requestDTO.getAlbunsIds().forEach(albumUuid -> {
+
                 AlbumJpaEntity albumJpaEntity = albumRepository.findByAlbumId(UUID.fromString(albumUuid))
                         .orElseThrow(() -> new DomainException("Não foi possível encontrar o álbum com ID: " + albumUuid));
 
                 artistaDomain.vincularAlbum(albumMapper.toDomain(albumJpaEntity));
+                albumJpaEntity.getArtistas().add(artistaEntity);
+
+                albunsGerenciados.add(albumJpaEntity);
             });
         }
 
-        ArtistaJpaEntity artistaEntity = artistaMapper.toEntity(artistaDomain);
+        artistaEntity.setAlbuns(albunsGerenciados);
 
         ArtistaJpaEntity savedEntity = artistaRepository.save(artistaEntity);
 
