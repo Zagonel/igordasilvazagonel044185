@@ -27,7 +27,8 @@ public class DesvincularCapaAlbumService {
 
         albumDomain.removerCapa(path);
 
-        //Aqui tenho que remover do MinIO a imagem referente a esse path.
+        //TODO: Aqui tenho que remover do MinIO a imagem referente a esse path.
+        //TODO: Testar esses services também e fazer um E2e para ele com testContainers
 
         albumMapper.updateEntityFromDomain(albumDomain, albumEntity);
 

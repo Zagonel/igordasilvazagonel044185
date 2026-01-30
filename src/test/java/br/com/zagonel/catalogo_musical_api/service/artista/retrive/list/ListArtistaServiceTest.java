@@ -100,7 +100,7 @@ class ListArtistaServiceTest {
     @Test
     @DisplayName("Deve filtrar artistas por tipo")
     void deveFiltrarPorTipo() {
-        ArtistaSearchQuery query = new ArtistaSearchQuery(0, 10, "nome", "ASC", null, TipoArtista.BANDA, null);
+        ArtistaSearchQuery query = new ArtistaSearchQuery(0, 10, "nome", "ASC", null, TipoArtista.BANDA.getCodigo(), null);
 
         Page<ArtistaResponseDTO> result = listArtistaService.execute(query);
 

@@ -2,6 +2,7 @@ package br.com.zagonel.catalogo_musical_api.domain.service.artista.retrive.list;
 
 import br.com.zagonel.catalogo_musical_api.api.dto.request.artista.ArtistaSearchQuery;
 import br.com.zagonel.catalogo_musical_api.api.dto.response.ArtistaResponseDTO;
+import br.com.zagonel.catalogo_musical_api.domain.enums.TipoArtista;
 import br.com.zagonel.catalogo_musical_api.infrastructure.mappers.ArtistaMapper;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.ArtistaJpaEntity;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.specifications.ArtistaSpecifications;
@@ -28,8 +29,11 @@ public class ListArtistaService {
         PageRequest pageRequest = PageRequest.of(query.page(), query.perPage(), sort);
 
         Specification<ArtistaJpaEntity> spec = Specification.where(ArtistaSpecifications.comNome(query.nome()))
-                .and(ArtistaSpecifications.comTipo(query.tipo()))
                 .and(ArtistaSpecifications.comNomeAlbum(query.nomeAlbum()));
+
+        if (query.tipo() != null) {
+            spec = spec.and(ArtistaSpecifications.comTipo(TipoArtista.fromCodigo(query.tipo())));
+        }
 
         return artistaRepository.findAll(spec, pageRequest)
                 .map(entity -> artistaMapper.toResponse(artistaMapper.toDomain(entity)));

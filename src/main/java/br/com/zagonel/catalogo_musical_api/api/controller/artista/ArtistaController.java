@@ -50,7 +50,7 @@ public class ArtistaController implements ArtistaApi {
                 sort,
                 direction,
                 nomeArtista,
-                TipoArtista.fromCodigo(tipoArtista),
+                tipoArtista,
                 nomeAlbum
         );
         return listArtistaService.execute(query);

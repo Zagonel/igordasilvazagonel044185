@@ -54,7 +54,7 @@ public class AlbumController implements AlbumApi {
                 direction,
                 titulo,
                 nomeArtista,
-                TipoArtista.fromCodigo(tipoArtista),
+                tipoArtista,
                 dataInicio,
                 dataFim
         );

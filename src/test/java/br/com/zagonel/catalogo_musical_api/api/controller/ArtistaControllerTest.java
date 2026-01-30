@@ -11,12 +11,16 @@ import br.com.zagonel.catalogo_musical_api.domain.service.artista.delete.DeleteA
 import br.com.zagonel.catalogo_musical_api.domain.service.artista.retrive.get.GetArtistaService;
 import br.com.zagonel.catalogo_musical_api.domain.service.artista.retrive.list.ListArtistaService;
 import br.com.zagonel.catalogo_musical_api.domain.service.artista.update.UpdateArtistaService;
+import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.jwt.JwtService;
+import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.usuario.CustomUserDetailsService;
+import br.com.zagonel.catalogo_musical_api.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
@@ -27,6 +31,7 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,8 +60,18 @@ class ArtistaControllerTest {
     @MockitoBean
     private DeleteArtistaService deleteArtistaService;
 
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UserRepository userRepository;
+
+    @MockitoBean
+    private CustomUserDetailsService customUserDetailsService;
+
     @Test
     @DisplayName("POST /artistas - Deve retornar 201 ao criar artista")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void deveRetornar201AoCriar() throws Exception {
         var input = new ArtistaCreateRequestDTO();
         input.setNome("Michael Jackson");
@@ -68,6 +83,7 @@ class ArtistaControllerTest {
         when(createArtistaService.execute(any())).thenReturn(response);
 
         mockMvc.perform(post("/artistas")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input)))
                 .andExpect(status().isCreated())
@@ -76,6 +92,7 @@ class ArtistaControllerTest {
 
     @Test
     @DisplayName("GET /artistas - Deve retornar 200 ao listar")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void deveRetornar200AoListar() throws Exception {
         var response = new ArtistaResponseDTO();
         response.setNome("Daft Punk");
@@ -84,6 +101,7 @@ class ArtistaControllerTest {
                 .thenReturn(new PageImpl<>(List.of(response)));
 
         mockMvc.perform(get("/artistas")
+                        .with(csrf())
                         .param("nome", "Daft Punk")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -92,6 +110,7 @@ class ArtistaControllerTest {
 
     @Test
     @DisplayName("PUT /artistas/{id} - Deve retornar 200 ao atualizar")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void deveRetornar200AoAtualizar() throws Exception {
         var id = UUID.randomUUID();
         var input = new ArtistaUpdateRequestDTO();
@@ -103,9 +122,12 @@ class ArtistaControllerTest {
         when(updateArtistaService.execute(eq(id), any())).thenReturn(response);
 
         mockMvc.perform(put("/artistas/{id}", id)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome").value("Novo Nome"));
     }
+
+    //falta o deletar Artista
 }

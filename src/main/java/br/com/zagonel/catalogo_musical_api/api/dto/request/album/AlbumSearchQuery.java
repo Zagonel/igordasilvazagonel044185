@@ -1,7 +1,5 @@
 package br.com.zagonel.catalogo_musical_api.api.dto.request.album;
 
-import br.com.zagonel.catalogo_musical_api.domain.enums.TipoArtista;
-
 import java.time.LocalDate;
 
 public record AlbumSearchQuery(
@@ -11,7 +9,7 @@ public record AlbumSearchQuery(
         String direction,
         String titulo,
         String nomeArtista,
-        TipoArtista tipoArtista,
+        Integer tipoArtista,
         LocalDate dataInicio,
         LocalDate dataFim
 ) {
