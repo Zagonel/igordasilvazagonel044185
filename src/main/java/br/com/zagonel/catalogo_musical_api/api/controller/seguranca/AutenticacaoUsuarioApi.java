@@ -1,7 +1,9 @@
 package br.com.zagonel.catalogo_musical_api.api.controller.seguranca;
 
-import br.com.zagonel.catalogo_musical_api.api.dto.request.usuario.LoginRequestDTO;
-import br.com.zagonel.catalogo_musical_api.api.dto.request.usuario.UsuarioCreateRequestDTO;
+import br.com.zagonel.catalogo_musical_api.api.dto.request.segurança.RefreshTokenRequestDTO;
+import br.com.zagonel.catalogo_musical_api.api.dto.request.segurança.TokenResponseDTO;
+import br.com.zagonel.catalogo_musical_api.api.dto.request.segurança.usuario.LoginRequestDTO;
+import br.com.zagonel.catalogo_musical_api.api.dto.request.segurança.usuario.UsuarioCreateRequestDTO;
 import br.com.zagonel.catalogo_musical_api.api.dto.response.LoginResponseDTO;
 import br.com.zagonel.catalogo_musical_api.api.dto.response.UsuarioResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,4 +38,14 @@ public interface AutenticacaoUsuarioApi {
     })
     @PostMapping("/register")
     ResponseEntity<UsuarioResponseDTO> register(@RequestBody @Valid UsuarioCreateRequestDTO data);
+
+    @Operation(summary = "Renova o token de acesso (JWT) usando um Refresh Token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Token renovado com sucesso"),
+            @ApiResponse(responseCode = "403", description = "Refresh Token expirado ou inválido. Necessário novo login"),
+            @ApiResponse(responseCode = "404", description = "Refresh Token não encontrado no banco de dados"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    @PostMapping("/refresh-token")
+    ResponseEntity<TokenResponseDTO> refreshToken(@RequestBody @Valid RefreshTokenRequestDTO request);
 }

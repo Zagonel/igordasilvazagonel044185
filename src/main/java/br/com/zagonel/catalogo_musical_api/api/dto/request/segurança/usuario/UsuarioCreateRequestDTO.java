@@ -1,4 +1,4 @@
-package br.com.zagonel.catalogo_musical_api.api.dto.request.usuario;
+package br.com.zagonel.catalogo_musical_api.api.dto.request.segurança.usuario;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

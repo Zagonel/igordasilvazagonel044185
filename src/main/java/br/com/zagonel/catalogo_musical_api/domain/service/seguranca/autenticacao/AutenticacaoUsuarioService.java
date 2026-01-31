@@ -1,7 +1,8 @@
 package br.com.zagonel.catalogo_musical_api.domain.service.seguranca.autenticacao;
 
-import br.com.zagonel.catalogo_musical_api.api.dto.request.usuario.LoginRequestDTO;
+import br.com.zagonel.catalogo_musical_api.api.dto.request.segurança.usuario.LoginRequestDTO;
 import br.com.zagonel.catalogo_musical_api.api.dto.response.LoginResponseDTO;
+import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.jwt.CreateRefreshTokenService;
 import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.jwt.JwtService;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.UserJpaEntity;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +18,19 @@ public class AutenticacaoUsuarioService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final CreateRefreshTokenService refreshTokenService;
 
-    public LoginResponseDTO login(LoginRequestDTO data){
+    public LoginResponseDTO login(LoginRequestDTO data) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.getEmail(), data.getSenha());
 
         var auth = this.authenticationManager.authenticate(usernamePassword);
+        var user = (UserJpaEntity) auth.getPrincipal();
 
-        var token = jwtService.generateToken((UserJpaEntity) Objects.requireNonNull(auth.getPrincipal()));
+        var accessToken = jwtService.generateToken((UserJpaEntity) Objects.requireNonNull(auth.getPrincipal()));
 
-        return new LoginResponseDTO(data.getEmail(), token);
+        assert user != null;
+        var refreshToken = refreshTokenService.createRefreshToken(user.getId());
+
+        return new LoginResponseDTO(data.getEmail(), accessToken, refreshToken);
     }
 }

@@ -1,6 +1,6 @@
 package br.com.zagonel.catalogo_musical_api.domain.service.seguranca.usuario;
 
-import br.com.zagonel.catalogo_musical_api.api.dto.request.usuario.UsuarioCreateRequestDTO;
+import br.com.zagonel.catalogo_musical_api.api.dto.request.segurança.usuario.UsuarioCreateRequestDTO;
 import br.com.zagonel.catalogo_musical_api.api.dto.response.UsuarioResponseDTO;
 import br.com.zagonel.catalogo_musical_api.domain.enums.UserRole;
 import br.com.zagonel.catalogo_musical_api.domain.exceptions.DomainException;

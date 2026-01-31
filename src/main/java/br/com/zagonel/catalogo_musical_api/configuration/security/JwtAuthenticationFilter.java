@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null) {
             var login = jwtService.validateToken(token);
 
-            if (!login.isEmpty()) {
+            if (!login.contains("Invalido")) {
                 UserDetails user = userRepository.findByEmail(login)
                         .orElseThrow(() -> new RuntimeException("Usuarío não encontrado durante a validação do token"));
 

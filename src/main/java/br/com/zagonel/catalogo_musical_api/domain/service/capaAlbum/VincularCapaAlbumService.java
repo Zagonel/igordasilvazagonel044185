@@ -22,7 +22,7 @@ public class VincularCapaAlbumService {
     @Transactional
     public void execute(UUID albumUuid, String path, String descricao, boolean principal) {
 
-        //Aqui vai o MinIo, vou receber a multifilePart, criar um ID e caminho de pasta montar o CapaAlbum e então adicionar ao Album.
+        //TODO: Aqui vai o MinIo, vou receber a multifilePart, criar um ID e caminho de pasta montar o CapaAlbum e então adicionar ao Album.
 
         AlbumJpaEntity albumEntity = albumRepository.findByAlbumId(albumUuid)
                 .orElseThrow(() -> new DomainException("Álbum não encontrado"));

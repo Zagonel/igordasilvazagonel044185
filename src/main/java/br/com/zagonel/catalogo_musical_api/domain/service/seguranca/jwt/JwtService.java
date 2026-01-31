@@ -9,14 +9,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 @Service
 public class JwtService {
 
     @Value("${jwt.secret.key}")
     private String secret;
+
+    @Value("${security.jwt.expiration-minutes}")
+    private long expirationMinutes;
 
     public String generateToken(UserJpaEntity user) {
         try {
@@ -40,11 +43,11 @@ public class JwtService {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException exception) {
-            return "";
+            return "Invalido";
         }
     }
 
     private Instant genExpirationDate() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return Date.from(Instant.now().plus(expirationMinutes, ChronoUnit.MINUTES)).toInstant();
     }
 }
