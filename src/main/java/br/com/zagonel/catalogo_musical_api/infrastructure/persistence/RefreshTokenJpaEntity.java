@@ -22,7 +22,7 @@ public class RefreshTokenJpaEntity {
     @Column(name = "token", nullable = false, unique = true)
     private String token;
 
-    @Column(name = "data_expiracao", nullable = false)
+    @Column(name = "expiry_date", nullable = false)
     private Instant expiryDate;
 
     @OneToOne
