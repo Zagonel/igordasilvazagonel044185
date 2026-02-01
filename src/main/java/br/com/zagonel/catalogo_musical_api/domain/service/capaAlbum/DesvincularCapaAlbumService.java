@@ -31,8 +31,6 @@ public class DesvincularCapaAlbumService {
 
         minioStorageService.delete(path);
 
-        //TODO: Testar esses services também e fazer um E2e para ele com testContainers
-
         albumMapper.updateEntityFromDomain(albumDomain, albumEntity);
 
         albumRepository.save(albumEntity);
