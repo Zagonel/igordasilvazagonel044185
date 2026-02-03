@@ -1,10 +1,10 @@
 package br.com.zagonel.catalogo_musical_api.api.controller;
 
 import br.com.zagonel.catalogo_musical_api.api.controller.artista_album.ArtistaAlbumController;
-import br.com.zagonel.catalogo_musical_api.domain.service.artista_album.DesvincularArtistaAlbumService;
-import br.com.zagonel.catalogo_musical_api.domain.service.artista_album.VincularArtistaAlbumService;
-import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.jwt.JwtService;
-import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.usuario.CustomUserDetailsService;
+import br.com.zagonel.catalogo_musical_api.service.artista_album.DesvincularArtistaAlbumService;
+import br.com.zagonel.catalogo_musical_api.service.artista_album.VincularArtistaAlbumService;
+import br.com.zagonel.catalogo_musical_api.service.seguranca.jwt.JwtService;
+import br.com.zagonel.catalogo_musical_api.service.seguranca.usuario.CustomUserDetailsService;
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

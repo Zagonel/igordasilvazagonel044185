@@ -1,6 +1,7 @@
 package br.com.zagonel.catalogo_musical_api.api.dto.response;
 
 import br.com.zagonel.catalogo_musical_api.domain.enums.TipoArtista;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonPropertyOrder({"id", "titulo", "dataLancamento", "capas", "artistas"})
 public class AlbumResponseDTO {
     private UUID id;
     private String titulo;
@@ -25,6 +27,7 @@ public class AlbumResponseDTO {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonPropertyOrder({"id", "nome", "tipo"})
     public static class ArtistaResumidoResponseDTO {
         private UUID id;
         private String nome;

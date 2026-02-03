@@ -22,9 +22,6 @@ public class CapaAlbumEmbeddable {
     @Column(name = "descricao", length = 100)
     private String descricao;
 
-    @Column(name = "principal", nullable = false)
-    private boolean principal;
-
     @Column(name = "upload_at")
     private LocalDateTime uploadAt;
 

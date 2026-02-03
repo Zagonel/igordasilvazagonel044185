@@ -2,7 +2,6 @@ package br.com.zagonel.catalogo_musical_api.service.artista.delete;
 
 import br.com.zagonel.catalogo_musical_api.domain.enums.TipoArtista;
 import br.com.zagonel.catalogo_musical_api.domain.exceptions.DomainException;
-import br.com.zagonel.catalogo_musical_api.domain.service.artista.delete.DeleteArtistaService;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.AlbumJpaEntity;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.ArtistaJpaEntity;
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.AlbumRepository;

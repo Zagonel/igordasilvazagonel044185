@@ -141,23 +141,6 @@ class AlbumTest {
                 .hasMessageContaining("O Artista informado não foi encontrado na lista de artistas vinculadas ao album.");
     }
 
-    @Test
-    @DisplayName("Deve gerenciar a troca de capa principal corretamente")
-    void deveGerenciarCapaPrincipal() {
-        Album album = Album.criarNovoAlbum("Capa Teste", LocalDate.now());
-
-        CapaAlbum capa1 = CapaAlbum.criarCapaAlbum("path/1.jpg", "Frente", true);
-        CapaAlbum capa2 = CapaAlbum.criarCapaAlbum("path/2.jpg", "Verso", true); // Nova principal
-
-        album.adicionarCapa(capa1);
-        assertThat(album.getCapaPrincipal()).isPresent().contains(capa1);
-
-        album.adicionarCapa(capa2);
-
-        assertThat(capa1.isPrincipal()).isFalse();
-        assertThat(album.getCapaPrincipal()).isPresent().contains(capa2);
-        assertThat(album.getCapas()).hasSize(2);
-    }
 
     @Test
     @DisplayName("Deve falhar ao adicionar capa do album por ser nula")
@@ -175,13 +158,12 @@ class AlbumTest {
     void deveRemoverCapaDoAlbum() {
         Album album = Album.criarNovoAlbum("AlbumTeste", LocalDate.now());
 
-        CapaAlbum capa1 = CapaAlbum.criarCapaAlbum("path/1.jpg", "Frente", true);
+        CapaAlbum capa1 = CapaAlbum.criarCapaAlbum("path/1.jpg", "Frente");
 
         album.adicionarCapa(capa1);
 
         assertEquals(capa1.getPath(), album.getCapas().getFirst().getPath());
         assertEquals(capa1.getDescricao(), album.getCapas().getFirst().getDescricao());
-        assertEquals(capa1.isPrincipal(), album.getCapas().getFirst().isPrincipal());
 
         album.removerCapa("path/1.jpg");
 

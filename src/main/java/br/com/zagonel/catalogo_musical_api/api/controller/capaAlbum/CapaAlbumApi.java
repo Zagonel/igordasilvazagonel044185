@@ -1,6 +1,8 @@
 package br.com.zagonel.catalogo_musical_api.api.controller.capaAlbum;
 
+import br.com.zagonel.catalogo_musical_api.api.dto.request.capaAlbum.CapaAlbumRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequestMapping(value = "albuns/{albumId}/capas")
@@ -25,9 +28,8 @@ public interface CapaAlbumApi {
     })
     void vincularCapa(
             @PathVariable UUID albumId,
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("descricao") String descricao,
-            @RequestParam("principal") boolean principal
+            @RequestParam("files") List<MultipartFile> files,
+            @ModelAttribute CapaAlbumRequest metadata
     );
 
     @DeleteMapping
@@ -41,4 +43,21 @@ public interface CapaAlbumApi {
             @PathVariable UUID albumId,
             @RequestParam("path") String path
     );
+
+    @GetMapping("/link-assinado")
+    @Operation(
+            summary = "Gera um link temporário assinado",
+            description = "Retorna uma URL do MinIO válida por 30 minutos para acessar o arquivo de imagem diretamente."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Link gerado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Caminho do arquivo inválido"),
+            @ApiResponse(responseCode = "500", description = "Erro ao comunicar com o servidor de storage")
+    })
+    String gerarLinkAssinado(
+            @Parameter(description = "O path completo do arquivo no storage (ex: albums/capa.jpg)", required = true)
+            @PathVariable UUID albumId,
+            @RequestParam String path
+    );
+
 }

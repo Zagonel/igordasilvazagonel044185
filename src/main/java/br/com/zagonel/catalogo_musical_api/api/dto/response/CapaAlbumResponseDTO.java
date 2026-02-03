@@ -10,6 +10,5 @@ import java.time.LocalDateTime;
 public class CapaAlbumResponseDTO {
     private String path;
     private String descricao;
-    private boolean principal;
     private LocalDateTime dataUpload;
 }

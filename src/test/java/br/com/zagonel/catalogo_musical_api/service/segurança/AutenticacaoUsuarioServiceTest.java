@@ -2,9 +2,9 @@ package br.com.zagonel.catalogo_musical_api.service.segurança;
 
 import br.com.zagonel.catalogo_musical_api.api.dto.request.segurança.usuario.LoginRequestDTO;
 import br.com.zagonel.catalogo_musical_api.api.dto.response.LoginResponseDTO;
-import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.autenticacao.AutenticacaoUsuarioService;
-import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.jwt.CreateRefreshTokenService;
-import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.jwt.JwtService;
+import br.com.zagonel.catalogo_musical_api.service.seguranca.autenticacao.AutenticacaoUsuarioService;
+import br.com.zagonel.catalogo_musical_api.service.seguranca.jwt.CreateRefreshTokenService;
+import br.com.zagonel.catalogo_musical_api.service.seguranca.jwt.JwtService;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.UserJpaEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

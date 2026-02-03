@@ -4,12 +4,11 @@ import br.com.zagonel.catalogo_musical_api.api.dto.request.artista.ArtistaCreate
 import br.com.zagonel.catalogo_musical_api.api.dto.request.artista.ArtistaSearchQuery;
 import br.com.zagonel.catalogo_musical_api.api.dto.request.artista.ArtistaUpdateRequestDTO;
 import br.com.zagonel.catalogo_musical_api.api.dto.response.ArtistaResponseDTO;
-import br.com.zagonel.catalogo_musical_api.domain.enums.TipoArtista;
-import br.com.zagonel.catalogo_musical_api.domain.service.artista.create.CreateArtistaService;
-import br.com.zagonel.catalogo_musical_api.domain.service.artista.delete.DeleteArtistaService;
-import br.com.zagonel.catalogo_musical_api.domain.service.artista.retrive.get.GetArtistaService;
-import br.com.zagonel.catalogo_musical_api.domain.service.artista.retrive.list.ListArtistaService;
-import br.com.zagonel.catalogo_musical_api.domain.service.artista.update.UpdateArtistaService;
+import br.com.zagonel.catalogo_musical_api.service.artista.create.CreateArtistaService;
+import br.com.zagonel.catalogo_musical_api.service.artista.delete.DeleteArtistaService;
+import br.com.zagonel.catalogo_musical_api.service.artista.retrive.get.GetArtistaService;
+import br.com.zagonel.catalogo_musical_api.service.artista.retrive.list.ListArtistaService;
+import br.com.zagonel.catalogo_musical_api.service.artista.update.UpdateArtistaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;

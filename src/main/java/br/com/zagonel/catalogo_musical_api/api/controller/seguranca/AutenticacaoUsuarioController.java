@@ -7,9 +7,9 @@ import br.com.zagonel.catalogo_musical_api.api.dto.request.segurança.usuario.Lo
 import br.com.zagonel.catalogo_musical_api.api.dto.request.segurança.usuario.UsuarioCreateRequestDTO;
 import br.com.zagonel.catalogo_musical_api.api.dto.response.LoginResponseDTO;
 import br.com.zagonel.catalogo_musical_api.api.dto.response.UsuarioResponseDTO;
-import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.autenticacao.AutenticacaoUsuarioService;
-import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.jwt.RefreshTokenService;
-import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.usuario.CreateUsuarioService;
+import br.com.zagonel.catalogo_musical_api.service.seguranca.autenticacao.AutenticacaoUsuarioService;
+import br.com.zagonel.catalogo_musical_api.service.seguranca.jwt.RefreshTokenService;
+import br.com.zagonel.catalogo_musical_api.service.seguranca.usuario.CreateUsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

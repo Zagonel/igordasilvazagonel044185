@@ -3,7 +3,6 @@ package br.com.zagonel.catalogo_musical_api.service.album.retrive.get;
 import br.com.zagonel.catalogo_musical_api.api.dto.response.AlbumResponseDTO;
 import br.com.zagonel.catalogo_musical_api.domain.exceptions.DomainException;
 import br.com.zagonel.catalogo_musical_api.domain.model.Album;
-import br.com.zagonel.catalogo_musical_api.domain.service.album.retrive.get.GetAlbumService;
 import br.com.zagonel.catalogo_musical_api.infrastructure.mappers.AlbumMapper;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.AlbumJpaEntity;
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.AlbumRepository;

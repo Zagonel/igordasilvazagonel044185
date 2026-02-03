@@ -1,7 +1,7 @@
 package br.com.zagonel.catalogo_musical_api.api.controller.artista_album;
 
-import br.com.zagonel.catalogo_musical_api.domain.service.artista_album.DesvincularArtistaAlbumService;
-import br.com.zagonel.catalogo_musical_api.domain.service.artista_album.VincularArtistaAlbumService;
+import br.com.zagonel.catalogo_musical_api.service.artista_album.DesvincularArtistaAlbumService;
+import br.com.zagonel.catalogo_musical_api.service.artista_album.VincularArtistaAlbumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 

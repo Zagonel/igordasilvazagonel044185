@@ -19,7 +19,6 @@ public class CapaAlbumMapper {
         CapaAlbumEmbeddable entity = new CapaAlbumEmbeddable();
         entity.setPath(domain.getPath());
         entity.setDescricao(domain.getDescricao());
-        entity.setPrincipal(domain.isPrincipal());
         entity.setUploadAt(domain.getDataUpload());
         return entity;
     }
@@ -31,17 +30,18 @@ public class CapaAlbumMapper {
         return new CapaAlbum(
                 entity.getPath(),
                 entity.getDescricao(),
-                entity.isPrincipal(),
                 entity.getUploadAt()
         );
     }
 
     public CapaAlbumResponseDTO toResponse(CapaAlbum domain) {
-        if (domain == null) return null;
+        if (domain == null) {
+            return null;
+        }
+
         CapaAlbumResponseDTO dto = new CapaAlbumResponseDTO();
         dto.setPath(domain.getPath());
         dto.setDescricao(domain.getDescricao());
-        dto.setPrincipal(domain.isPrincipal());
         dto.setDataUpload(domain.getDataUpload());
         return dto;
     }

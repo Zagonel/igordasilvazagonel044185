@@ -14,18 +14,17 @@ public class CapaAlbumTest {
     @Test
     @DisplayName("Deve criar uma capa de album válida")
     void deveCriarCapaAlbumValida() {
-        CapaAlbum capaAlbum = CapaAlbum.criarCapaAlbum("path/1.jpg", "Frente", true);
+        CapaAlbum capaAlbum = CapaAlbum.criarCapaAlbum("path/1.jpg", "Frente");
 
         assertThat(capaAlbum.getPath()).isNotNull();
         assertThat(capaAlbum.getDescricao()).isEqualTo("Frente");
-        assertThat(capaAlbum.isPrincipal()).isEqualTo(true);
         assertThat(capaAlbum.getPath()).isEqualTo("path/1.jpg");
     }
 
     @Test
     @DisplayName("Deve falhar ao criar uma capa de album devido ao path invalido")
     void deveFalharCriarCapaAlbumComPathInvalido() {
-        assertThatThrownBy(() -> CapaAlbum.criarCapaAlbum("", "Frente", true))
+        assertThatThrownBy(() -> CapaAlbum.criarCapaAlbum("", "Frente"))
                 .isInstanceOf(DomainException.class)
                 .hasMessageContaining("O caminho (path) da imagem é obrigatório.");
     }
@@ -33,7 +32,7 @@ public class CapaAlbumTest {
     @Test
     @DisplayName("Deve falhar ao criar uma capa de album devido a descricao invalida")
     void deveFalharCriarCapaAlbumComDescricaoInvalida() {
-        assertThatThrownBy(() -> CapaAlbum.criarCapaAlbum("path/1.jpg", "", true))
+        assertThatThrownBy(() -> CapaAlbum.criarCapaAlbum("path/1.jpg", ""))
                 .isInstanceOf(DomainException.class)
                 .hasMessageContaining("A descrição da imagem é obrigatório.");
     }

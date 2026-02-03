@@ -2,7 +2,7 @@ package br.com.zagonel.catalogo_musical_api.service.segurança;
 
 import br.com.zagonel.catalogo_musical_api.api.dto.request.segurança.usuario.UsuarioCreateRequestDTO;
 import br.com.zagonel.catalogo_musical_api.domain.exceptions.DomainException;
-import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.usuario.CreateUsuarioService;
+import br.com.zagonel.catalogo_musical_api.service.seguranca.usuario.CreateUsuarioService;
 import br.com.zagonel.catalogo_musical_api.infrastructure.mappers.UserMapper;
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;

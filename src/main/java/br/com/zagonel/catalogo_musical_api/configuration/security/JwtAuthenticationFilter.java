@@ -1,6 +1,6 @@
 package br.com.zagonel.catalogo_musical_api.configuration.security;
 
-import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.jwt.JwtService;
+import br.com.zagonel.catalogo_musical_api.service.seguranca.jwt.JwtService;
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

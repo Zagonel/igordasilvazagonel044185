@@ -6,7 +6,6 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Getter
@@ -79,10 +78,6 @@ public class Album {
             throw new DomainException("Dados da capa são obrigatórios.");
         }
 
-        if (novaCapa.isPrincipal()) {
-            this.capas.forEach(c -> c.alterarStatusPrincipal(false));
-        }
-
         this.capas.add(novaCapa);
     }
 
@@ -96,13 +91,7 @@ public class Album {
                 .findFirst()
                 .orElseThrow(() -> new DomainException("Capa não encontrada para o caminho informado."));
 
-        boolean eraPrincipal = capaParaRemover.isPrincipal();
-
         this.capas.remove(capaParaRemover);
-
-        if (eraPrincipal && !this.capas.isEmpty()) {
-            this.capas.getFirst().alterarStatusPrincipal(true);
-        }
     }
 
     private static void validarTitulo(String titulo) {
@@ -119,10 +108,6 @@ public class Album {
 
     public boolean possuiArtista() {
         return !artistas.isEmpty();
-    }
-
-    public Optional<CapaAlbum> getCapaPrincipal() {
-        return capas.stream().filter(CapaAlbum::isPrincipal).findFirst();
     }
 
 }

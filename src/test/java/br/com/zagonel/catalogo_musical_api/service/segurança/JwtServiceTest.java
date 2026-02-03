@@ -1,6 +1,6 @@
 package br.com.zagonel.catalogo_musical_api.service.segurança;
 
-import br.com.zagonel.catalogo_musical_api.domain.service.seguranca.jwt.JwtService;
+import br.com.zagonel.catalogo_musical_api.service.seguranca.jwt.JwtService;
 import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.UserJpaEntity;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

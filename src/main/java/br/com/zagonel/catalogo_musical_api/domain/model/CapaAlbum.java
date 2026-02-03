@@ -13,27 +13,22 @@ public class CapaAlbum {
 
     private final String path;
     private final String descricao;
-    private boolean principal;
     private final LocalDateTime dataUpload;
 
-    public CapaAlbum(String path, String descricao, boolean principal, LocalDateTime dataUpload) {
+    public CapaAlbum(String path, String descricao, LocalDateTime dataUpload) {
         this.path = path;
         this.descricao = descricao;
-        this.principal = principal;
         this.dataUpload = dataUpload;
     }
 
-    public static CapaAlbum criarCapaAlbum(String path, String descricao, boolean principal) {
+    public static CapaAlbum criarCapaAlbum(String path, String descricao) {
         if (path == null || path.isBlank()) {
             throw new DomainException("O caminho (path) da imagem é obrigatório.");
         }
         if (descricao == null || descricao.isBlank()) {
             throw new DomainException("A descrição da imagem é obrigatório.");
         }
-        return new CapaAlbum(path, descricao, principal, LocalDateTime.now());
+        return new CapaAlbum(path, descricao, LocalDateTime.now());
     }
 
-    public void alterarStatusPrincipal(boolean status) {
-        this.principal = status;
-    }
 }
