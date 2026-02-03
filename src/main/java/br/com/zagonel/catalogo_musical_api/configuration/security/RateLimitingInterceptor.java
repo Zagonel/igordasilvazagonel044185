@@ -9,9 +9,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +30,7 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
+    public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws IOException {
 
         String clientIp = request.getRemoteAddr();
         Bucket bucket = cache.get(clientIp, k -> createNewBucket());
@@ -39,7 +39,9 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
             response.addHeader("X-Rate-Limit-Remaining", String.valueOf(bucket.getAvailableTokens()));
             return true;
         } else {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Rate limit exceeded");
+            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+            response.getWriter().write("Rate limit exceeded. Try again in a minute.");
+            return false;
         }
     }
 }
