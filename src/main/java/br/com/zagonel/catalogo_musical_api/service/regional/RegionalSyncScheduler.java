@@ -14,12 +14,6 @@ public class RegionalSyncScheduler {
 
     private final RegionalSyncService regionalSyncService;
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void onStartup() {
-        log.info("Aplicação iniciada. Executando sincronização inicial de regionais...");
-        regionalSyncService.processarSincronizacao();
-    }
-
     @Scheduled(fixedRate = 3600000)
     public void runSync() {
         regionalSyncService.processarSincronizacao();

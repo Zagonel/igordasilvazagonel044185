@@ -80,8 +80,7 @@ Em vez de utilizar abordagens com múltiplas consultas ao banco de dados foi uti
 
 
 * ***Ciclo de Vida e Agendamento***
-  * **Importação Inicial:** Com a utilização do evento `ApplicationReadyEvent` ao inicializar a aplicação é disparado a sincronização imediatamente o que garante que a tabela interna seja populada de acordo com o requisito do edital.
-  * **Sincronização Agendada (Scheduler):** Foi criado job agendado (`@Scheduled`) que executa o serviço de sincronização periodicamente para manter a base atualizada.
+  * **Sincronização Agendada (Scheduler):** Foi criado job agendado (`@Scheduled`) que executa o serviço de sincronização periodicamente para manter a base atualizada e ao inicializar a aplicação é disparado a sincronização imediatamente o que garante que a tabela interna seja populada de acordo com o requisito do edital.
 
 
 ### Observabilidade e Health Checks
@@ -93,6 +92,20 @@ Para facilitar a operação em ambientes de container a aplicação foi configur
   * **/api/v1/actuator/health/liveness :** Indica se a aplicação está rodando.
   * **/api/v1/actuator/health/readiness :** Indica se a aplicação está pronta para receber requisições.
   * **/api/v1/actuator/scheduledtasks :** Lista todas as tarefas agendadas (Cron Jobs).
+
+
+### WebSocket
+Para atender ao requisito do edital sem a necessidade de polling foi implementado a comunicação assíncrona via WebSockets para avisar quando um novo album é cadastrado.
+
+* ***Implementação Técnica*** 
+  * **Protocolo:** Foi utilizado o protocolo STOMP (Simple Text Oriented Messaging Protocol) facilitar o roteamento do Pub/Sub do websocket.
+  * **Fluxo:**
+    * O cliente (Frontend) se conecta ao endpoint: `http://localhost:8080/api/v1/ws`
+    * O cliente se inscreve no tópico: /topic/albuns
+    * Sempre que é criado um album o serviço `CreateAlbumService` publica o payload do novo álbum neste tópico o que gera a notificação para todos os inscritos ao topico.
+  * **Decisão de Segurança (CORS e WebSocket)**
+    * Para facilitar os testes funcionais do websocket o endpoint `/ws` foi configurado intencionalmente como Permissão de Origem Abrangente (*), isso é feito somente para facilitar os testes em um ambiente produtivo seria acrescentado estritamente os dominios confiaveis que podem utilizar o websocket.
+    * Para visualizar o funcionamento do WebSocket foi feito um monitor simples com Html e Js para facilitar na vizualização, esse monitor pode ser acessado na url: `http://localhost:8080/api/v1/monitorWs.html`
 
 
 

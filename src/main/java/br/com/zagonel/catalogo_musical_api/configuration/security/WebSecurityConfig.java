@@ -30,6 +30,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/monitorWs.html").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()

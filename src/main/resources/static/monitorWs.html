@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor WebSocket - SEFAZ</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            color: #333;
+        }
+
+        #status-container {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: white;
+            display: inline-block;
+        }
+
+        .connected {
+            background-color: #28a745;
+        }
+
+        .disconnected {
+            background-color: #dc3545;
+        }
+
+        #messages {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .message-card {
+            background: #e9ecef;
+            border-left: 5px solid #007bff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            animation: fadeIn 0.5s;
+        }
+
+        .message-time {
+            font-size: 0.8em;
+            color: #666;
+            float: right;
+        }
+
+        .json-dump {
+            font-family: monospace;
+            font-size: 0.9em;
+            background: #333;
+            color: #0f0;
+            padding: 5px;
+            border-radius: 3px;
+            display: block;
+            margin-top: 5px;
+            white-space: pre-wrap;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📡 Monitor de Álbuns em Tempo Real</h2>
+
+    <div id="status-container">
+        Status: <span id="status" class="status-badge disconnected">Desconectado</span>
+    </div>
+
+    <h3>Últimas Atualizações:</h3>
+    <ul id="messages">
+    </ul>
+</div>
+
+<script type="text/javascript">
+    const SOCKET_URL = 'http://localhost:8080/api/v1/ws';
+    const TOPIC_NAME = '/topic/albuns';
+
+    var stompClient = null;
+
+    function connect() {
+        console.log("Iniciando conexão com: " + SOCKET_URL);
+
+        var socket = new SockJS(window.location.protocol + '//' + window.location.host + '/api/v1/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            updateStatus(true);
+            console.log('Conectado: ' + frame);
+            stompClient.subscribe(TOPIC_NAME, function (messageOutput) {
+                showMessage(JSON.parse(messageOutput.body));
+            });
+
+        }, function (error) {
+            updateStatus(false);
+            console.error('Erro no WebSocket:', error);
+            appendError("Erro de conexão. Verifique se o backend está rodando e se o endpoint /ws está liberado no Security.");
+        });
+    }
+
+    function updateStatus(isConnected) {
+        const statusSpan = document.getElementById("status");
+        if (isConnected) {
+            statusSpan.innerText = "🟢 CONECTADO";
+            statusSpan.className = "status-badge connected";
+        } else {
+            statusSpan.innerText = "🔴 DESCONECTADO";
+            statusSpan.className = "status-badge disconnected";
+        }
+    }
+
+    function showMessage(albumJson) {
+        var ul = document.getElementById("messages");
+        var li = document.createElement("li");
+        li.className = "message-card";
+
+        var time = new Date().toLocaleTimeString();
+
+        li.innerHTML = `
+            <span class="message-time">${time}</span>
+            <strong>Novo Álbum Recebido!</strong><br>
+            Título: <b>${albumJson.titulo}</b> <br>
+            ID: ${albumJson.id}
+            <div class="json-dump">${JSON.stringify(albumJson, null, 2)}</div>
+        `;
+
+        ul.insertBefore(li, ul.firstChild);
+    }
+
+    function appendError(msg) {
+        var ul = document.getElementById("messages");
+        var li = document.createElement("li");
+        li.className = "message-card";
+        li.style.borderLeft = "5px solid red";
+        li.innerText = msg;
+        ul.appendChild(li);
+    }
+
+    connect();
+</script>
+
+</body>
+</html>
