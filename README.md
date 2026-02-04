@@ -92,12 +92,13 @@ Para facilitar a operação em ambientes de container a aplicação foi configur
   * **/api/v1/actuator/health/liveness :** Indica se a aplicação está rodando.
   * **/api/v1/actuator/health/readiness :** Indica se a aplicação está pronta para receber requisições.
   * **/api/v1/actuator/scheduledtasks :** Lista todas as tarefas agendadas (Cron Jobs).
+  * **/api/v1/jacoco/index.html :** Relatorio da cobertura de Testes do Jacoco.
 
 
 ### WebSocket
 Para atender ao requisito do edital sem a necessidade de polling foi implementado a comunicação assíncrona via WebSockets para avisar quando um novo album é cadastrado.
 
-* ***Implementação Técnica*** 
+* **Implementação Técnica**
   * **Protocolo:** Foi utilizado o protocolo STOMP (Simple Text Oriented Messaging Protocol) facilitar o roteamento do Pub/Sub do websocket.
   * **Fluxo:**
     * O cliente (Frontend) se conecta ao endpoint: `http://localhost:8080/api/v1/ws`
@@ -108,6 +109,46 @@ Para atender ao requisito do edital sem a necessidade de polling foi implementad
     * Para visualizar o funcionamento do WebSocket foi feito um monitor simples com Html e Js para facilitar na vizualização, esse monitor pode ser acessado na url: `http://localhost:8080/api/v1/monitorWs.html`
 
 
+### Execução via Docker
+O projeto foi containerizado para garantir uma execução consistente utilizando o Multi-stage Build do Docker, nele é executado os testes unitários e gerado o relatório do Jacoco durante o processo de build.
+
+* **Pré-requisitos**
+  * Docker e Docker Compose instalados.     
+* **Passo a Passo**
+  * Na raiz do projeto execute o comando `docker-compose up --build` para compilar a aplicação, rodar os testes e subir a infraestrutura
+  * Aguarde até que os logs indiquem que a aplicação inicializou (mensagem: Started CatalogoMusicalApiApplication).
+
+
+### Endpoints e Ferramentas Disponíveis
+* **Documentação (Swagger)** `http://localhost:8080/api/v1/swagger-ui.html` Interface para testar os endpoints REST da API.
+
+* **Monitor WebSocket**	`http://localhost:8080/api/v1/monitorWs.html`	Cliente HTML simples para visualizar as notificações de novos álbuns em tempo real.
+
+* **Relatório de Testes (JaCoCo)** `http://localhost:8080/api/v1/jacoco/index.html`	Relatório da cobertura de testes da aplicação.
+
+* **MinIO Console**	`http://localhost:9001`	Painel administrativo do MinIo para visualizar as capas de álbuns enviadas.
+
+* **Health Check**	`http://localhost:8080/api/v1/actuator/health`	Endpoint de monitoramento e metricas do sistema e do seus dependentes como o Banco de Dados e Conexão com Storage.
+
+### Credenciais de Acesso
+
+* **Banco de Dados (PostgreSQL)**
+  * **Host:** localhost
+  * **Porta:** 5432
+  * **Database:** db_catalogo_musical
+  * **Usuário:** admin
+  * **Senha:** admin  
+* **Object Storage (MinIO)**
+  * **Console Web:** `http://localhost:9001`
+  * **Usuário (Access Key):** adminuser
+  * **Senha (Secret Key):** adminpassword
+  * **Bucket Público:** catalogo-musical
+
+### Configuração de Segurança (JWT)
+Para fins de cumprimento dos requisitos do edital a aplicação inicializa com as seguintes definições de segurança injetadas via variáveis de ambiente no Docker
+* **`SECURITY_JWT_EXPIRATION_MINUTES`:** Tempo de vida (TTL) do Access Token com valor de 5
+* **`SECURITY_JWT_REFRESH_EXPIRATION_MINUTES`:** Tempo de vida do Refresh Token com valor de 60
+* **`JWT_SECRET_KEY`:** Chave privada para assinatura digital dos tokens
 
 
 

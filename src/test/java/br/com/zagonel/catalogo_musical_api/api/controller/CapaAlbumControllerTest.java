@@ -5,6 +5,7 @@ import br.com.zagonel.catalogo_musical_api.api.dto.request.capaAlbum.CapaAlbumRe
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.UserRepository;
 import br.com.zagonel.catalogo_musical_api.service.capaAlbum.DesvincularCapaAlbumService;
 import br.com.zagonel.catalogo_musical_api.service.capaAlbum.VincularCapaAlbumService;
+import br.com.zagonel.catalogo_musical_api.service.minio.RetriveLinkPreAssinadoMinioStorageService;
 import br.com.zagonel.catalogo_musical_api.service.seguranca.jwt.JwtService;
 import br.com.zagonel.catalogo_musical_api.service.seguranca.usuario.CustomUserDetailsService;
 import org.junit.jupiter.api.DisplayName;
@@ -41,6 +42,9 @@ class CapaAlbumControllerTest {
 
     @MockitoBean
     private DesvincularCapaAlbumService desvincularCapaAlbumService;
+
+    @MockitoBean
+    private RetriveLinkPreAssinadoMinioStorageService retriveLinkPreAssinadoMinioStorageService;
 
     @MockitoBean
     private JwtService jwtService;

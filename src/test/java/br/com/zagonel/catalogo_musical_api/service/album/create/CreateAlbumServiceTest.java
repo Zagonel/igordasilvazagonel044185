@@ -17,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         CreateAlbumService.class,
         AlbumMapper.class,
         ArtistaMapper.class,
-        CapaAlbumMapper.class
+        CapaAlbumMapper.class,
 })
 class CreateAlbumServiceTest {
 
@@ -45,6 +47,9 @@ class CreateAlbumServiceTest {
 
     @Autowired
     private CreateAlbumService createAlbumService;
+
+    @MockitoBean
+    private SimpMessagingTemplate messagingTemplate;
 
     @Autowired
     private TestEntityManager entityManager;

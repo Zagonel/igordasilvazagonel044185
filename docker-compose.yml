@@ -1,0 +1,82 @@
+services:
+  api:
+    build: .
+    container_name: catalogo_musical_api
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5432/db_catalogo_musical
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: adminuser
+      MINIO_SECRET_KEY: adminpassword
+      MINIO_BUCKET: catalogo-musical
+      SECURITY_JWT_EXPIRATION_MINUTOS: 5
+      SECURITY_JWT_REFRESH_EXPIRATION_MINUTES: 60
+      JWT_SECRET_KEY: d67610ceb816ee3a67dbc82cc892ba3a109b9792e538b907c2b84540450986e9af7077121d66a6403c56e4847dc240b1812de9e522ef79c7a753c80eb17278a9
+      SPRING_WEB_RESOURCES_STATIC_LOCATIONS: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:/app/static-content/
+
+    networks:
+      - catalogo-network
+
+  postgres_db:
+    image: postgres:16-alpine
+    container_name: local_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: db_catalogo_musical
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d db_catalogo_musical" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - catalogo-network
+    restart: unless-stopped
+
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: local_minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: adminuser
+      MINIO_ROOT_PASSWORD: adminpassword
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/minio server --console-address ':9001' /data &
+      until curl -s http://localhost:9000/minio/health/live; do echo 'Aguardando MinIO iniciar...'; sleep 1; done;
+      /usr/bin/mc alias set localminio http://localhost:9000 adminuser adminpassword;
+      /usr/bin/mc mb localminio/catalogo-musical --ignore-existing;
+      /usr/bin/mc anonymous set public localminio/catalogo-musical;
+      wait
+      "
+    volumes:
+      - minio_data:/data
+    networks:
+      - catalogo-network
+
+volumes:
+  postgres_data:
+  minio_data:
+
+networks:
+  catalogo-network:
+    driver: bridge
