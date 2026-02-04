@@ -11,6 +11,7 @@ import br.com.zagonel.catalogo_musical_api.infrastructure.persistence.ArtistaJpa
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.AlbumRepository;
 import br.com.zagonel.catalogo_musical_api.infrastructure.repository.ArtistaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class CreateAlbumService {
     private final ArtistaRepository artistaRepository;
     private final AlbumMapper albumMapper;
     private final ArtistaMapper artistaMapper;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Transactional
     public AlbumResponseDTO execute(AlbumCreateRequestDTO requestDTO) {
@@ -53,6 +55,10 @@ public class CreateAlbumService {
 
         AlbumJpaEntity savedEntity = albumRepository.save(albumEntity);
 
-        return albumMapper.toResponse(albumMapper.toDomain(savedEntity));
+        AlbumResponseDTO response = albumMapper.toResponse(albumMapper.toDomain(savedEntity));
+
+        messagingTemplate.convertAndSend("/topic/albuns", response);
+
+        return response;
     }
 }

@@ -18,5 +18,5 @@ VALUES (1, 1), -- Discovery -> Daft Punk
        (4, 3), -- Dark Side -> Pink Floyd
        (5, 4); -- After Hours -> The Weeknd
 
-SELECT setval('artista_seq', 51, false);
-SELECT setval('album_seq', 51, false);
+SELECT setval('artista_seq', (SELECT MAX(id) FROM artista));
+SELECT setval('album_seq', (SELECT MAX(id) FROM album));
